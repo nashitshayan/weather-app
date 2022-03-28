@@ -82,7 +82,7 @@ const updateDOM = (data) => {
 	description.textContent = data.mainHeading;
 	feelsLike.innerHTML = `Feels like: ${data.tempData.feels_like}&#8451;`;
 	humidity.textContent = `Humidity: ${data.tempData.humidity}%`;
-	minMax.innerHTML = `Max / Min : ${data.tempData.temp_max}&#8451; / ${data.tempData.temp_min}&#8451;`;
+	minMax.innerHTML = `Min / Max : ${data.tempData.temp_min}&#8451; / ${data.tempData.temp_max}&#8451;`;
 	card.style.display = 'block';
 };
 const handleSubmit = (e) => {
