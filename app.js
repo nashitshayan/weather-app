@@ -9,7 +9,21 @@ const feelsLike = document.querySelector('.feelsLike');
 const humidity = document.querySelector('.humidity');
 const minMax = document.querySelector('.minMax');
 const card = document.querySelector('.card');
+
 const apiKey = '4311a715553625ac01e218822f2d46f9';
+
+const fetchWeatherData = async (location) => {
+	try {
+		const urlForCoords = geocodingURL(location);
+		const [lat, lon] = await getCoordinates(urlForCoords);
+		const weatherData = await getWeatherData(lat, lon);
+		//	console.log(weatherData);
+		const processedData = processWeatherData(weatherData);
+		updateDOM(processedData);
+	} catch {
+		alert('Error: City Not Found');
+	}
+};
 
 const geocodingURL = (city) =>
 	`https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${apiKey}`;
@@ -18,17 +32,23 @@ const currentWeatherURL = (lat, lon) =>
 	`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
 
 const getCoordinates = async (urlForCoords) => {
-	const locationResponse = await fetch(urlForCoords);
-	const locationData = await locationResponse.json();
-	console.log(locationData);
-	return [locationData[0].lat, locationData[0].lon];
+	try {
+		const locationResponse = await fetch(urlForCoords);
+		const locationData = await locationResponse.json();
+		return [locationData[0].lat, locationData[0].lon];
+	} catch {
+		alert('Error: Unable to Fetch Co-ordinates');
+	}
 };
-
 const getWeatherData = async (lat, lon) => {
-	const urlForWeather = currentWeatherURL(lat, lon);
-	const weatherResponse = await fetch(urlForWeather);
-	const weatherData = await weatherResponse.json();
-	return weatherData;
+	try {
+		const urlForWeather = currentWeatherURL(lat, lon);
+		const weatherResponse = await fetch(urlForWeather);
+		const weatherData = await weatherResponse.json();
+		return weatherData;
+	} catch {
+		alert('Error: Unable to Fetch Co-ordinates');
+	}
 };
 
 const processWeatherData = (data) => {
@@ -46,29 +66,10 @@ const processWeatherData = (data) => {
 	const mainHeading = data.weather[0].main;
 
 	return { tempData, city, country, description, mainHeading };
-	//console.log(tempData, city, country, description, mainHeading);
 };
 
-const fetchWeatherData = async (location) => {
-	const urlForCoords = geocodingURL(location);
-	const [lat, lon] = await getCoordinates(urlForCoords);
-	const weatherData = await getWeatherData(lat, lon);
-	//	console.log(weatherData);
-	const processedData = processWeatherData(weatherData);
-	updateDOM(processedData);
-	//console.log(processedData);
-};
-/**<div class="card">
-				<div class="cityName"></div>
-				<div class="currentDate"></div>
-				<div class="temp"></div>
-				<div class="weatherIcon"></div>
-				<div class="description"></div>
-				<div class="feelsLike"></div>
-				<div class="humidity"></div>
-				<div class="minMax"></div>
-			</div> */
 const updateDOM = (data) => {
+	// card.innerHTML = ``;
 	let cDate = new Date().toLocaleDateString('en-us', {
 		weekday: 'long',
 		year: 'numeric',
@@ -85,6 +86,7 @@ const updateDOM = (data) => {
 	minMax.innerHTML = `Min / Max : ${data.tempData.temp_min}&#8451; / ${data.tempData.temp_max}&#8451;`;
 	card.style.display = 'block';
 };
+
 const handleSubmit = (e) => {
 	let input = document.getElementById('searchBar');
 	//	console.log();

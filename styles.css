@@ -44,6 +44,10 @@ header {
 	border-radius: 4px;
 	font-size: 1.4rem;
 }
+
+.error {
+	border: 2px solid red;
+}
 #btnSearch {
 	background-color: var(--clr-secondary);
 	color: var(--clr--accent);
