@@ -1,6 +1,14 @@
 const form = document.getElementById('searchForm');
 const btnSearch = document.getElementById('btnSearch');
-
+const cityName = document.querySelector('.cityName');
+const currentDate = document.querySelector('.currentDate');
+const temp = document.querySelector('.temp');
+const weatherIcon = document.querySelector('.weatherIcon');
+const description = document.querySelector('.description');
+const feelsLike = document.querySelector('.feelsLike');
+const humidity = document.querySelector('.humidity');
+const minMax = document.querySelector('.minMax');
+const card = document.querySelector('.card');
 const apiKey = '4311a715553625ac01e218822f2d46f9';
 
 const geocodingURL = (city) =>
@@ -26,10 +34,8 @@ const getWeatherData = async (lat, lon) => {
 const processWeatherData = (data) => {
 	const tempData = {
 		feels_like: data.main.feels_like,
-		grnd_level: data.main.grnd_level,
 		humidity: data.main.humidity,
 		pressure: data.main.pressure,
-		sea_level: data.main.sea_level,
 		temp: data.main.temp,
 		temp_max: data.main.temp_max,
 		temp_min: data.main.temp_min,
@@ -39,6 +45,7 @@ const processWeatherData = (data) => {
 	const description = data.weather[0].description;
 	const mainHeading = data.weather[0].main;
 
+	return { tempData, city, country, description, mainHeading };
 	//console.log(tempData, city, country, description, mainHeading);
 };
 
@@ -47,9 +54,37 @@ const fetchWeatherData = async (location) => {
 	const [lat, lon] = await getCoordinates(urlForCoords);
 	const weatherData = await getWeatherData(lat, lon);
 	//	console.log(weatherData);
-	processWeatherData(weatherData);
+	const processedData = processWeatherData(weatherData);
+	updateDOM(processedData);
+	//console.log(processedData);
 };
-
+/**<div class="card">
+				<div class="cityName"></div>
+				<div class="currentDate"></div>
+				<div class="temp"></div>
+				<div class="weatherIcon"></div>
+				<div class="description"></div>
+				<div class="feelsLike"></div>
+				<div class="humidity"></div>
+				<div class="minMax"></div>
+			</div> */
+const updateDOM = (data) => {
+	let cDate = new Date().toLocaleDateString('en-us', {
+		weekday: 'long',
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric',
+	});
+	cityName.textContent = data.city;
+	currentDate.textContent = cDate;
+	temp.innerHTML = `${data.tempData.temp}&#8451;`;
+	//weatherIcon.textContent = data.weatherIcon;
+	description.textContent = data.mainHeading;
+	feelsLike.innerHTML = `Feels like: ${data.tempData.feels_like}&#8451;`;
+	humidity.textContent = `Humidity: ${data.tempData.humidity} %`;
+	minMax.innerHTML = `Max / Min : ${data.tempData.temp_max}&#8451; / ${data.tempData.temp_min}&#8451;`;
+	card.style.display = 'block';
+};
 const handleSubmit = (e) => {
 	let input = document.getElementById('searchBar');
 	//	console.log();
