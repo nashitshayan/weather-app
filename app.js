@@ -12,7 +12,7 @@ const card = document.querySelector('.card');
 const apiKey = '4311a715553625ac01e218822f2d46f9';
 
 const geocodingURL = (city) =>
-	`http://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${apiKey}`;
+	`https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${apiKey}`;
 
 const currentWeatherURL = (lat, lon) =>
 	`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
@@ -81,7 +81,7 @@ const updateDOM = (data) => {
 	//weatherIcon.textContent = data.weatherIcon;
 	description.textContent = data.mainHeading;
 	feelsLike.innerHTML = `Feels like: ${data.tempData.feels_like}&#8451;`;
-	humidity.textContent = `Humidity: ${data.tempData.humidity} %`;
+	humidity.textContent = `Humidity: ${data.tempData.humidity}%`;
 	minMax.innerHTML = `Max / Min : ${data.tempData.temp_max}&#8451; / ${data.tempData.temp_min}&#8451;`;
 	card.style.display = 'block';
 };
